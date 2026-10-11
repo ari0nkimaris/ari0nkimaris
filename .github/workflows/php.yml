@@ -1,5 +1,5 @@
 
-name: PHP Composer
+name: Repository Validation
 
 'on':
   push:
@@ -12,23 +12,21 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  validate:
+    name: Validate profile repository
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          tools: composer
-
-      - name: Check Composer files
+      - name: Check profile README
         run: |
-          test -f composer.json
-          composer validate --strict
+          test -f README.md
+          test -s README.md
+          echo "Profile README exists and is not empty."
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+      - name: Check workflow files
+        run: |
+          test -d .github/workflows
+          echo "Workflow directory exists."
